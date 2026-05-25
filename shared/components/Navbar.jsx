@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getDomainUrl } from "../utils/urls.js";
+import { getDomainUrl, getCrossDomainNavigateUrl } from "../utils/urls.js";
 
 const getCurrentAppKey = () => {
   const host = window.location.hostname;
@@ -47,57 +47,11 @@ export default function Navbar() {
   const navigateTo = (page) => {
     setMenuOpen(false);
     window.scrollTo({ top: 0, behavior: "instant" });
-
-    // Determine target subdomain mapping
-    let targetSubdomain = "landing";
-    if (
-      page === "intelligence" ||
-      page === "visibility_intelligence" ||
-      page === "source_mapping" ||
-      page === "entity_monitoring" ||
-      page === "competitive_analysis" ||
-      page === "enterprise_ai" ||
-      page === "brand_visibility" ||
-      page === "strategic_intelligence" ||
-      page === "resources"
-    ) {
-      targetSubdomain = "intelligence";
-    } else if (page === "signal") {
-      targetSubdomain = "signal";
-    }
-
-    const targetBaseUrl = getDomainUrl(targetSubdomain);
-
-    // If matching current app, use React Router client navigation
-    if (targetSubdomain === currentAppKey) {
-      if (page === "home") {
-        navigate("/");
-      } else {
-        // Remove prepended slash if navigating within sub-app's custom sub-routes
-        let pageRoute = page;
-        if (currentAppKey === "intelligence" && page === "intelligence") {
-          pageRoute = "";
-        } else if (currentAppKey === "signal" && page === "signal") {
-          pageRoute = "";
-        }
-        navigate(`/${pageRoute}`);
-      }
+    const targetUrl = getCrossDomainNavigateUrl(page, currentAppKey);
+    if (targetUrl.startsWith("/")) {
+      navigate(targetUrl);
     } else {
-      // Cross subdomain navigation
-      let path = "";
-      if (page === "home") {
-        path = "/";
-      } else {
-        // If navigating to another division's root
-        if (targetSubdomain === "intelligence" && page === "intelligence") {
-          path = "/";
-        } else if (targetSubdomain === "signal" && page === "signal") {
-          path = "/";
-        } else {
-          path = `/${page}`;
-        }
-      }
-      window.location.href = `${targetBaseUrl}${path}`;
+      window.location.href = targetUrl;
     }
   };
 

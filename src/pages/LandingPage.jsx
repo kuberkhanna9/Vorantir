@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import VorantirLandingPage from "../../vorantir_enterprise_landing_page_react.jsx";
+import { getCrossDomainNavigateUrl } from "../../shared/utils/urls.js";
 
 export default function LandingPage() {
   useEffect(() => {
@@ -44,10 +45,11 @@ export default function LandingPage() {
   const navigate = useNavigate();
   const handleNavigate = (page) => {
     window.scrollTo({ top: 0, behavior: "instant" });
-    if (page === "home") {
-      navigate("/");
+    const targetUrl = getCrossDomainNavigateUrl(page, "landing");
+    if (targetUrl.startsWith("/")) {
+      navigate(targetUrl);
     } else {
-      navigate(`/${page}`);
+      window.location.href = targetUrl;
     }
   };
 

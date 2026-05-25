@@ -40,9 +40,9 @@ export default function AppRoutes() {
         <Route path="/trust" element={<TrustCenterPage />} />
         <Route path="/status" element={<StatusPage />} />
         <Route path="/press" element={<PressPage />} />
-        <Route path="/press/article-1" element={<PressArticle1Page />} />
-        <Route path="/press/article-2" element={<PressArticle2Page />} />
-        <Route path="/press/article-3" element={<PressArticle3Page />} />
+        <Route path="/press-article-1" element={<PressArticle1Page />} />
+        <Route path="/press-article-2" element={<PressArticle2Page />} />
+        <Route path="/press-article-3" element={<PressArticle3Page />} />
       </Route>
     </Routes>
   );

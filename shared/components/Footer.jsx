@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { getDomainUrl } from "../utils/urls.js";
+import { getDomainUrl, getCrossDomainNavigateUrl } from "../utils/urls.js";
 import mossyHills from "../assets/mossy_hills_terrain.png";
 
 const getCurrentAppKey = () => {
@@ -35,55 +35,11 @@ export default function Footer() {
 
   const navigateTo = (page) => {
     window.scrollTo({ top: 0, behavior: "instant" });
-
-    // Determine target subdomain mapping
-    let targetSubdomain = "landing";
-    if (
-      page === "intelligence" ||
-      page === "visibility_intelligence" ||
-      page === "source_mapping" ||
-      page === "entity_monitoring" ||
-      page === "competitive_analysis" ||
-      page === "enterprise_ai" ||
-      page === "brand_visibility" ||
-      page === "strategic_intelligence" ||
-      page === "resources"
-    ) {
-      targetSubdomain = "intelligence";
-    } else if (page === "signal") {
-      targetSubdomain = "signal";
-    }
-
-    const targetBaseUrl = getDomainUrl(targetSubdomain);
-
-    // If matching current app, use React Router client navigation
-    if (targetSubdomain === currentAppKey) {
-      if (page === "home") {
-        navigate("/");
-      } else {
-        let pageRoute = page;
-        if (currentAppKey === "intelligence" && page === "intelligence") {
-          pageRoute = "";
-        } else if (currentAppKey === "signal" && page === "signal") {
-          pageRoute = "";
-        }
-        navigate(`/${pageRoute}`);
-      }
+    const targetUrl = getCrossDomainNavigateUrl(page, currentAppKey);
+    if (targetUrl.startsWith("/")) {
+      navigate(targetUrl);
     } else {
-      // Cross subdomain navigation
-      let path = "";
-      if (page === "home") {
-        path = "/";
-      } else {
-        if (targetSubdomain === "intelligence" && page === "intelligence") {
-          path = "/";
-        } else if (targetSubdomain === "signal" && page === "signal") {
-          path = "/";
-        } else {
-          path = `/${page}`;
-        }
-      }
-      window.location.href = `${targetBaseUrl}${path}`;
+      window.location.href = targetUrl;
     }
   };
 

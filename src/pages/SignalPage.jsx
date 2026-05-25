@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import unsplashBg from "../../cinematic_sky_background.png";
+import { getCrossDomainNavigateUrl } from "../../shared/utils/urls.js";
 
 export default function SignalPage() {
   const navigate = useNavigate();
@@ -523,7 +524,12 @@ export default function SignalPage() {
           <button
             onClick={() => {
               window.scrollTo({ top: 0, behavior: "instant" });
-              navigate("/contact");
+              const targetUrl = getCrossDomainNavigateUrl("contact", "signal");
+              if (targetUrl.startsWith("/")) {
+                navigate(targetUrl);
+              } else {
+                window.location.href = targetUrl;
+              }
             }}
             className="rounded-full bg-white text-black px-8 py-3.5 text-[13px] font-semibold tracking-wide hover:opacity-90 hover:scale-105 transition-all duration-300"
           >

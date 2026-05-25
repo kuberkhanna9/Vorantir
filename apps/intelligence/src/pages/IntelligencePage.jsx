@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import dashboardImg from "@shared/assets/Landing.png";
+import { getCrossDomainNavigateUrl } from "@shared/utils/urls.js";
 
 const llmLogos = [
   {
@@ -58,10 +59,11 @@ export default function IntelligencePage() {
 
   const navigateTo = (page) => {
     window.scrollTo({ top: 0, behavior: "instant" });
-    if (page === "home") {
-      navigate("/");
+    const targetUrl = getCrossDomainNavigateUrl(page, "intelligence");
+    if (targetUrl.startsWith("/")) {
+      navigate(targetUrl);
     } else {
-      navigate(`/${page}`);
+      window.location.href = targetUrl;
     }
   };
 
