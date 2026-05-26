@@ -4,11 +4,40 @@ import PageWrapper from "../components/shared/PageWrapper.jsx";
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", org: "", email: "", type: "enterprise", msg: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [honeypot, setHoneypot] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError("");
+
+    // 1. Spambot Honeypot Validation
+    if (honeypot) {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+        setSubmitted(true);
+      }, 1000);
+      return;
+    }
+
+    // 2. Email Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      setError("Please enter a valid corporate email address.");
+      return;
+    }
+
+    // 3. API Abstraction Layer Simulation with Rate Limit Scaffold
     if (form.name && form.email) {
-      setSubmitted(true);
+      setLoading(true);
+      
+      // Simulate Resend or custom backend dispatch
+      setTimeout(() => {
+        setLoading(false);
+        setSubmitted(true);
+      }, 1200);
     }
   };
 
@@ -98,8 +127,32 @@ export default function ContactPage() {
                 ></textarea>
               </div>
 
-              <button type="submit" className="rounded-full bg-black text-white px-8 py-3.5 text-[13px] shadow-[0_15px_40px_rgba(0,0,0,0.14)] hover:opacity-90 transition-opacity">
-                Transmit inquiry
+              {/* Honeypot field - invisible to genuine visitors but filled by spambots */}
+              <div style={{ display: "none" }} aria-hidden="true">
+                <label htmlFor="b_username">Username</label>
+                <input
+                  id="b_username"
+                  type="text"
+                  name="b_username"
+                  tabIndex="-1"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  autoComplete="off"
+                />
+              </div>
+
+              {error && (
+                <div className="text-[#a82525] text-[13px] tracking-wide mt-2">
+                  {error}
+                </div>
+              )}
+
+              <button 
+                type="submit" 
+                disabled={loading}
+                className="rounded-full bg-black text-white px-8 py-3.5 text-[13px] shadow-[0_15px_40px_rgba(0,0,0,0.14)] hover:opacity-90 transition-opacity disabled:opacity-50"
+              >
+                {loading ? "Transmitting..." : "Transmit inquiry"}
               </button>
             </form>
           )}

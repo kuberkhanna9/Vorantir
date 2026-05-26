@@ -1,8 +1,5 @@
-User-agent: *
-Allow: /
-Disallow: /api/
+# GEO-Optimized Crawler Directives for the Vorantir Ecosystem
 
-# Custom AI crawler friendliness rules
 User-agent: GPTBot
 Allow: /
 
@@ -21,4 +18,7 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://signal.vorantir.com/sitemap.xml
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
